@@ -13,6 +13,7 @@
       display: flex;
       flex-direction: column;
       height: 100vh;
+      overflow: hidden;
     }
     .header {
       position: sticky;
@@ -26,14 +27,16 @@
     }
     .input-container {
       position: relative;
-      flex: 1;
+      flex-grow: 1;
       display: flex;
+      min-width: 0; /* Prevents input from overflowing */
     }
     .header input {
-      flex: 1;
+      flex-grow: 1;
       padding: 10px;
       font-size: 1.5em;
       box-sizing: border-box;
+      width: 100%; /* Ensures input doesn't overflow */
     }
     .clear-btn {
       position: absolute;
@@ -50,6 +53,7 @@
     .header button {
       padding: 10px;
       font-size: 1.5em;
+      flex-shrink: 0; /* Prevents buttons from shrinking */
     }
     iframe {
       flex: 1;
@@ -78,19 +82,27 @@
     let history = [];
     let currentIndex = -1;
 
-    searchButton.addEventListener('click', performSearch);
+    searchButton.addEventListener('click', () => {
+      performSearch();
+      searchInput.blur(); // Close the keyboard on mobile
+    });
+
     searchInput.addEventListener('input', () => {
       clearButton.style.display = searchInput.value ? 'block' : 'none';
     });
+
     searchInput.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') {
         performSearch();
+        searchInput.blur(); // Close the keyboard on mobile
       }
     });
+
     clearButton.addEventListener('click', () => {
       searchInput.value = '';
       clearButton.style.display = 'none';
     });
+
     backButton.addEventListener('click', () => {
       if (currentIndex > 0) {
         currentIndex--;
