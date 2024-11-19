@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portuguese Wiktionary Search</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    .header {
+      position: sticky;
+      top: 0;
+      background-color: white;
+      padding: 10px;
+      display: flex;
+      gap: 5px;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .header input {
+      flex: 1;
+      padding: 8px;
+    }
+    .header button {
+      padding: 8px;
+    }
+    iframe {
+      flex: 1;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <input type="text" id="searchInput" placeholder="Enter word" />
+    <button id="searchButton">Search</button>
+    <button id="backButton" disabled>Back</button>
+  </div>
+  <iframe id="iframeView" title="Wiktionary View"></iframe>
+
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+    const backButton = document.getElementById('backButton');
+    const iframeView = document.getElementById('iframeView');
+
+    let history = [];
+    let currentIndex = -1;
+
+    searchButton.addEventListener('click', performSearch);
+    searchInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        performSearch();
+      }
+    });
+
+    backButton.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateIframe();
+        updateButtons();
+      }
+    });
+
+    function performSearch() {
+      const word = searchInput.value.trim();
+      if (word) {
+        history = history.slice(0, currentIndex + 1);
+        history.push(word);
+        currentIndex = history.length - 1;
+        updateIframe();
+        updateButtons();
+      }
+    }
+
+    function updateIframe() {
+      const currentWord = history[currentIndex];
+      if (currentWord) {
+        iframeView.src = `https://en.wiktionary.org/wiki/${encodeURIComponent(currentWord)}#Portuguese`;
+      }
+    }
+
+    function updateButtons() {
+      backButton.disabled = currentIndex <= 0;
+    }
+  </script>
+</body>
+</html>
