@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portuguese Wiktionary Search</title>
+  <title>Mobile Wiktionary Search</title>
+  <link rel="manifest" href="manifest.json">
   <style>
     body {
       margin: 0;
@@ -23,12 +24,32 @@
       z-index: 1000;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
+    .input-container {
+      position: relative;
+      flex: 1;
+      display: flex;
+    }
     .header input {
       flex: 1;
-      padding: 8px;
+      padding: 10px;
+      font-size: 1.5em;
+      box-sizing: border-box;
+    }
+    .clear-btn {
+      position: absolute;
+      right: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5em;
+      color: gray;
+      padding: 0;
     }
     .header button {
-      padding: 8px;
+      padding: 10px;
+      font-size: 1.5em;
     }
     iframe {
       flex: 1;
@@ -38,7 +59,10 @@
 </head>
 <body>
   <div class="header">
-    <input type="text" id="searchInput" placeholder="Enter word" />
+    <div class="input-container">
+      <input type="text" id="searchInput" placeholder="Enter word" />
+      <button class="clear-btn" id="clearButton" style="display: none;">&times;</button>
+    </div>
     <button id="searchButton">Search</button>
     <button id="backButton" disabled>Back</button>
   </div>
@@ -48,18 +72,25 @@
     const searchInput = document.getElementById('searchInput');
     const searchButton = document.getElementById('searchButton');
     const backButton = document.getElementById('backButton');
+    const clearButton = document.getElementById('clearButton');
     const iframeView = document.getElementById('iframeView');
 
     let history = [];
     let currentIndex = -1;
 
     searchButton.addEventListener('click', performSearch);
+    searchInput.addEventListener('input', () => {
+      clearButton.style.display = searchInput.value ? 'block' : 'none';
+    });
     searchInput.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') {
         performSearch();
       }
     });
-
+    clearButton.addEventListener('click', () => {
+      searchInput.value = '';
+      clearButton.style.display = 'none';
+    });
     backButton.addEventListener('click', () => {
       if (currentIndex > 0) {
         currentIndex--;
