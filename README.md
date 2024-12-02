@@ -7,4 +7,6 @@ It is a very simple single-page web app to look up Portuguese words in English W
 
 Open it in your mobile browser and then add it to the home screen to use as a regular phone app.
 
+On a desktop, use Cmd-Ctrl-i to move focus to the search input.
+
 Enjoy!
